@@ -233,8 +233,7 @@ write_csv(quantaqc, file = path_name)
 
 
 #Concatenate file name to GoogleDrive path location
-#googlepath <-
-#~/Community Science Lab/Monitoring Programs/Continuous Monitoring Sites/Andy Murphy Building/QAQ MOD-PM/Processed Data
+googlepath <- paste( "~/Community Science Lab/Monitoring Programs/Continuous Monitoring Sites/Andy Murphy Building/QAQ MOD-PM/Processed Data", path_name, sep = "")
 
 #uploading processed dataframe to google drive
 processedDF <- drive_upload(path_name, type = "csv", 
