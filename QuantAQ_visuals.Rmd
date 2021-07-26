@@ -2,7 +2,7 @@
 title: "QuantAQ Visuals"
 output: html_notebook
 ---
-
+Creates charts from processed QuantAQ dataframe. Currently does not download from Googledrive. Works out of working directory to find file. 
 
 
 ```{r}
@@ -125,9 +125,9 @@ Boxplots
 b1 <- ggplot(purpdf,aes(x="",y=temp_C))+geom_boxplot()
 b2 <- ggplot(purpdf,aes(x="",y=`Humidity_%`))+geom_boxplot()
 b3 <- ggplot(purpdf,aes(x="",y=Pressure_hpa))+geom_boxplot()
-b4 <- ggplot(purpdf,aes(x="",y=`PM1.0_ATM_ug/m3_avg`))+geom_boxplot()
-b5 <- ggplot(purpdf,aes(x="",y=`PM2.5_ATM_ug/m3_avg`))+geom_boxplot()
-b6 <- ggplot(purpdf,aes(x="",y=`PM10_ATM_ug/m3_avg`))+geom_boxplot()
+b4 <- ggplot(purpdf,aes(x="",y=`PM1.0_ug/m3_avg`))+geom_boxplot()
+b5 <- ggplot(purpdf,aes(x="",y=`PM2.5_ug/m3_avg`))+geom_boxplot()
+b6 <- ggplot(purpdf,aes(x="",y=`PM10_ug/m3_avg`))+geom_boxplot()
 b7 <- ggplot(purpdf,aes(x="",y=`>=0.3um/dl.secA`))+geom_boxplot()
 b8 <- ggplot(purpdf,aes(x="",y=`>=0.5um/dl.secA`))+geom_boxplot()
 b9 <- ggplot(purpdf,aes(x="",y=`>1.0um/dl.secA`))+geom_boxplot()
@@ -194,7 +194,7 @@ ggplot(data = hquantdf,
   geom_line(aes(y = daily_mean), linetype = 2) +
   #geom_errorbar(aes(ymin = daily_mean - sepm2.5, ymax = daily_mean + sepm2.5), size = .2, width = 1,alpha = .3) +
   #geom_smooth(se = FALSE) +
-  geom_hline(yintercept=35, color="orange", lty=2) +
+  #geom_hline(yintercept=35, color="orange", lty=2) +
   #annotate("text", x= 10, y = 37, label = "EPA 24-hr Avg. Threshold", size = 3) +
   #geom_line(aes(y = daily_mean), color = "red") +
   scale_x_date(date_breaks = "days", date_labels = "%b %d") +
