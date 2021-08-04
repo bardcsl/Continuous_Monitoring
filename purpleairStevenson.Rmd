@@ -290,10 +290,6 @@ And finally export the clean csv file to the designated storage folder. Right no
 
 ```{r}
 # Take the orginal file name and insert "clean" label in file name
-path_name <- str_sub(name_file,1,nchar(name_file)-4) %>%
-  paste("_clean.csv", sep = "")
-
-write_csv(purple_airc, file = path_name)
 
 #write feather file
 feather_name <- str_sub(name_file,1,nchar(name_file)-4) %>%
@@ -301,29 +297,23 @@ feather_name <- str_sub(name_file,1,nchar(name_file)-4) %>%
 write_feather(purple_airc, feather_name)
 
 
-#Concatenate file name to GoogleDrive path location
-googlepath <- paste( "~/Community Science Lab/Monitoring Programs/Continuous Monitoring Sites/Bard Library/PURPLE AIR/Processed Data/", path_name, sep = "")
+#Change the dttm columns to chr for writing to csv file
+purple_airc$time_utc <- as.character(purple_airc$time_utc)
+purple_airc$time_est <- as.character(purple_airc$time_est)
 
-#uploading processed dataframe to google drive
-processedDF <- drive_upload(path_name, type = "csv", 
-                  path = googlepath, overwrite = TRUE)
+#and write csv file
+path_name <- str_sub(name_file,1,nchar(name_file)-4) %>%
+  paste("_clean.csv", sep = "")
 
+write_csv(purple_airc, file = path_name)
 
-
-#download master file
-master <- drive_download(
-  "~/Community Science Lab/Monitoring Programs/Continuous Monitoring Sites/Bard Library/PURPLE AIR/Master/stevenson_purpleair_master.csv",
-  overwrite = TRUE
-)
+#read in master file
+master <- read_csv("stevenson_purpleair_master.csv")
+master$time_utc <- as.character(master$time_utc)
+master$time_est <- as.character(master$time_est)
 
 #binding the new month's data to master and creating new master csv file
-fm <- read_csv(master)
-newmaster <- bind_rows(fm, purple_airc)
+newmaster <- bind_rows(master, purple_airc)
 write_csv(newmaster, file ="stevenson_purpleair_master.csv") #verify that it overwrites
-
-#uploading new updated master file to google drive
-nmaster <- drive_upload("stevenson_purpleair_master.csv", type = "csv", 
-                  path = "~/Community Science Lab/Monitoring Programs/Continuous Monitoring Sites/Bard Library/PURPLE AIR/Master/stevenson_purpleair_master.csv", overwrite = TRUE)
-
 
 ```
