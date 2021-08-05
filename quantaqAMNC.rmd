@@ -6,12 +6,15 @@ output: html_notebook
 This is the script for the QuantAQ sensor installed on the
 Exterior of Andy Murphy Neighborhood Center. 
 
+User must place a copy of this months data file into their working directory where they keep this script, along with a copy of the "master" csv file. 
+The script will save a cleaned output of this months data, and save a new version of the master csv with the new data appended. Both will be saved to the working directory and need to be manually moved into Google Drive for sharing/storage. 
+
+
 Load in the packages that we're using:
 ```{r}
 library(tidyverse)
 library(lubridate)
 library(openair)
-library(googledrive)
 ```
 
 Read in the csv file. This file has already been downloaded and put into the appropriate folder with the correct name:
@@ -20,20 +23,6 @@ month_name <- "April 2021" #edit the correct month here
 
 name_file <- "/Mod-PM-00044_Apr2021_AMNC_final.csv" #This is what you should edit each month to change the name of the file
 name_file_raw <-  "/Mod-PM-00044_Apr2021_AMNC_raw.csv" #This is what you should edit to change the name of the raw data file
-
-#Concatenate filename to googledrive directory
-name_path <- paste("~/Shared with me/Community Science Lab/Monitoring Programs/Continuous Monitoring Sites/Andy Murphy Building/QAQ MOD-PM/Raw Data/Final/", month_name, name_file, sep = "")
-
-#Concatenate filename to googledrive directory - raw data
-name_path_raw <- paste("~/Shared with me/Community Science Lab/Monitoring Programs/Continuous Monitoring Sites/Andy Murphy Building/QAQ MOD-PM/Raw Data/Raw/", month_name, name_file_raw, sep = "")
-
-drive_download(file = name_path_raw,
-  overwrite = TRUE
-)
-drive_download(name_path,
-  overwrite = TRUE
-)
-
 
 quantaq <- read_csv(name_file) 
 quantaq_raw <- read_csv(name_file_raw)
@@ -231,33 +220,19 @@ path_name <- str_sub(name_file,1,nchar(name_file)-4) %>%
 
 write_csv(quantaqc, file = path_name)
 
-
-#Concatenate file name to GoogleDrive path location
-googlepath <- paste( "~/Community Science Lab/Monitoring Programs/Continuous Monitoring Sites/Andy Murphy Building/QAQ MOD-PM/Processed Data", path_name, sep = "")
-
-#uploading processed dataframe to google drive
-processedDF <- drive_upload(path_name, type = "csv", 
-                  path = googlepath, overwrite = TRUE)
 ```
 
 
 Beta version of interacting with the google drive. Let's discuss before this gets used:
 
 ```{r}
-#download master file
-master <- drive_download(
-  "~/Community Science Lab/Monitoring Programs/Continuous Monitoring Sites/Andy Murphy Building/QAQ MOD-PM/Master/AMNC_quantaq_master.csv",
-  overwrite = TRUE
-)
+#read in master file
+master <- read_csv("AMNC_quantaq_master.csv") #verify name
 
 #binding the new month's data to master and creating new master csv file
-fm <- read_csv(master)
-newmaster <- bind_rows(fm, quantaqc)
-write_csv(newmaster, file ="AMNC_quantaq_master.csv") #verify that it overwrites
 
-#uploading new updated master file to google drive
-nmaster <- drive_upload("AMNC_quantaq_master.csv", type = "csv", 
-                  path = "~/Community Science Lab/Monitoring Programs/Continuous Monitoring Sites/Andy Murphy Building/QAQ MOD-PM/Master/AMNC_quantaq_master.csv", overwrite = TRUE)
+newmaster <- bind_rows(master, quantaqc)
+write_csv(newmaster, file ="AMNC_quantaq_master.csv") #verify that it overwrites
 
 
 ```

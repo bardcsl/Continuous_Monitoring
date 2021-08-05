@@ -5,7 +5,8 @@ output: html_notebook
 This script is for the PurpleAir Sensor installed on the
 Exterior of Bard Library
 
-
+User must place a copy of this months data files (4 of them) into their working directory where they keep this script, along with a copy of the "master" csv file. 
+The script will save a cleaned output of this months data, and save a new version of the master csv with the new data appended. Both will be saved to the working directory and need to be manually moved into Google Drive for sharing/storage. 
 
 
 Load in the packages that we're using:
@@ -17,7 +18,7 @@ library(feather)
 
 ```
 
-Read in the csv file. This file has already been downloaded and put into the appropriate folder with the correct name. The user needs to select whether this sensor is monitoring outside or inside:
+Read in the csv files. These file has already been downloaded and put into the appropriate folder with the correct name. The user needs to select whether this sensor is monitoring outside or inside:
 ```{r}
 
 # Is the sensor monitoring outside or indoors
