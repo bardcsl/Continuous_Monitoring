@@ -26,7 +26,7 @@ purpdf <- read_csv("april2021_clean.csv") #edit name for the dataframe that you 
 
 ```{r}
 
-p1 <- ggplot(purpdf, aes(time_utc,y)) +
+p1 <- ggplot(purpdf, aes(time_est,y)) +
         geom_point(aes(y = `PM2.5_ug/m3_avg`), size= .3, color = "red", alpha =.4) +
         labs(
           x = NULL,
@@ -44,7 +44,7 @@ p1 <- ggplot(purpdf, aes(time_utc,y)) +
           text = element_text(family = "Helvetica")
         ) 
 
-p2 <- ggplot(purpdf, aes(time_utc,y)) +
+p2 <- ggplot(purpdf, aes(time_est,y)) +
           geom_point(aes(y = `PM1.0_ug/m3_avg`), size= .3, color = "blue", alpha =.4) +
           labs(
             x = NULL,
@@ -60,7 +60,7 @@ p2 <- ggplot(purpdf, aes(time_utc,y)) +
         ) 
 
 
-p3 <- ggplot(purpdf, aes(time_utc,y)) +
+p3 <- ggplot(purpdf, aes(time_est,y)) +
         geom_point(aes(y = `PM10_ug/m3_avg`), size= .3, color = "green", alpha =.4) +
           labs(
           x = NULL,
@@ -92,7 +92,7 @@ f$Particle_Size <- factor(f$Particle_Size, levels =
 c(">=0.3um/dl.secA",">=0.5um/dl.secA",">1.0um/dl.secA",">=2.5um/dl.secA",">=5.0um/dl.secA",">=10.0um/dl.secA"))
  
 # bins Facetted 
-ggplot(f,aes(time_utc, Counts, color = Particle_Size)) +
+ggplot(f,aes(time_est, Counts, color = Particle_Size)) +
   geom_point(size= .3, alpha =.4) +
   labs(
     x = NULL,
@@ -155,7 +155,7 @@ Highlighting Average PM2.5:
 ```{r}
 #PM2.5
 ggplot(purpdf,
-       aes(time_utc,y)) +
+       aes(time_est,y)) +
   geom_point(aes(y = `PM2.5_ug/m3_avg`), size= .3, color = "red", alpha =.4) +
   scale_x_datetime(date_breaks = "4 days", date_labels = "%b %d") +
   labs(
@@ -180,7 +180,7 @@ ggplot(purpdf,
 ```{r}
 #creating dataframe w/ hourly averages of PM2.5 and PM10
 hpurpdf <- purpdf %>%
-  mutate(hour = hour(time_utc), date = as_date(time_utc)
+  mutate(hour = hour(time_est), date = as_date(time_est)
   ) %>%
   group_by(date) %>% #group by the date
   summarise(daily_mean = mean(`PM2.5_ug/m3_avg`), #daily pm2.5 mean
