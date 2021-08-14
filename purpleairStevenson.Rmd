@@ -206,7 +206,7 @@ if (sensor_loc == 1){
 } else{
   purple_airc$`PM1.0_ug/m3_avg` <- (purple_airc$`PM1.0_CF1_ug/m3.primA`+purple_airc$`PM1.0_CF1_ug/m3.primB`)/2
   purple_airc$`PM2.5_ug/m3_avg` <- (purple_airc$`PM2.5_CF1_ug/m3.primA`+purple_airc$`PM2.5_CF1_ug/m3.primB`)/2
-  purple_airc$`PM10_ug/m3_avg` <- (purple_airc$`PM10_CF1_ug/m3.primA`+purple_airc$`PM10_CF1_ug/m3.primB`)/2
+  purple_airc$`PM10_ug/m3_avg` <- (purple_airc$`PM10.0_CF1_ug/m3.primA`+purple_airc$`PM10.0_CF1_ug/m3.primB`)/2
   }
 
 
