@@ -17,12 +17,12 @@ library(lubridate)
 library(openair)
 ```
 
-Read in the csv file. This file has already been downloaded and put into the appropriate folder with the correct name:
+Read in the csv file. This file has already been downloaded and put into the appropriate folder with the correct name. You need to to edit the file names in the code chunk below:
 ```{r}
 month_name <- "April 2021" #edit the correct month here
 
-name_file <- "/Mod-PM-00044_Apr2021_AMNC_final.csv" #This is what you should edit each month to change the name of the file
-name_file_raw <-  "/Mod-PM-00044_Apr2021_AMNC_raw.csv" #This is what you should edit to change the name of the raw data file
+name_file <- "AMNC_QAQ_April.csv" #This is what you should edit each month to change the name of the file
+name_file_raw <-  "Mod-PM-00044_Apr2021_AMNC_raw.csv" #This is what you should edit to change the name of the raw data file
 
 quantaq <- read_csv(name_file) 
 quantaq_raw <- read_csv(name_file_raw)
@@ -93,25 +93,41 @@ And a quick look at some summary statistics for the different variables before a
 summary(quantaq)
 ```
 
-Isolate the top and bottom .05% in order to scan values to confirm that even the extreme values don't have measurement errors causing issues:
+Isolate the top and bottom 10 in order to scan values to confirm that even the extreme values don't have measurement errors causing issues:
+
+
 ```{r}
-# First pm2.5
-lower_bound <- quantile(quantaq$pm25, 0.0005)
-upper_bound <- quantile(quantaq$pm25, 0.9995)
+# Starting with pm2.5
+# First make a temp dataframe with the data:
+topten <- quantaq
+# Then reorder low to high according to pm2.5
+topten <- topten[order(topten$pm25),]
 
-outlier_ind <- which(quantaq$pm25 < lower_bound | quantaq$pm25 > upper_bound)
+#display the lowest 10 rows
+head(topten, n = 10)
 
-quantaq[outlier_ind, ]
+#display the highest 10 rows
+tail(topten, n = 10)
+
+
 ```
+
 ```{r}
-# Then PM 10
-lower_bound <- quantile(quantaq$pm10, 0.0005)
-upper_bound <- quantile(quantaq$pm10, 0.9995)
+# And next pm10
+# First make a temp dataframe with the data:
+topten <- quantaq
+# Then reorder low to high according to pm10
+topten <- topten[order(topten$pm10),]
 
-outlier_ind <- which(quantaq$pm10 < lower_bound | quantaq$pm25 > upper_bound)
+#display the lowest 10 rows
+head(topten, n = 10)
 
-quantaq[outlier_ind, ]
+#display the highest 10 rows
+tail(topten, n = 10)
+
+
 ```
+
 Now a quick look at the raw_data before we proceed. There are so many variables in this data, that we want to mostly be verifying that the data is covering the same time period. I'll choose just a handful of variables to display:
 
 ```{r}
@@ -207,6 +223,15 @@ paste("Number of rows dropped:", nrow(quantaq_full) - nrow(quantaqc))
 p <- (nrow(quantaq_full) - nrow(quantaqc))/nrow(quantaq_full)
 paste("% of rows dropped:", p)
 ```
+
+Displaying the dropped rows so that a human can examine why they were dropped and whether a problem needs to be investigated:
+
+```{r}
+droppedrows <- anti_join(quantaq_full,quantaqc)
+
+droppedrows
+```
+
 
 
 

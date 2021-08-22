@@ -191,6 +191,14 @@ p <- (nrow(purple_air) - nrow(purple_airc))/nrow(purple_air)
 paste("% of rows dropped:", p)
 ```
 
+Displaying the dropped rows so that a human can examine why they were dropped and whether a problem needs to be investigated:
+
+```{r}
+droppedrows <- anti_join(purple_air,purple_airc)
+
+droppedrows
+```
+
 
 Adding averaged columns for PM from two sensors:
 
@@ -266,24 +274,39 @@ purple_airc <- purple_airc %>%
 
 
 ```
-Isolate the top and bottom .05% in order to scan values to confirm that even the extreme values don't have measurement errors causing issues:
+Isolate the top and bottom 10 in order to scan values to confirm that even the extreme values don't have measurement errors causing issues:
+
+
 ```{r}
-# First pm2.5
-lower_bound <- quantile(purple_airc$`PM2.5_ug/m3_avg`, 0.0005)
-upper_bound <- quantile(purple_airc$`PM2.5_ug/m3_avg`, 0.9995)
+# Starting with pm2.5
+# First make a temp dataframe with the data:
+topten <- purple_airc
+# Then reorder low to high according to pm2.5
+topten <- topten[order(topten$`PM2.5_ug/m3_avg`),]
 
-outlier_ind <- which((purple_airc$`PM2.5_ug/m3_avg` < lower_bound) | (purple_airc$`PM2.5_ug/m3_avg` > upper_bound))
+#display the lowest 10 rows
+head(topten, n = 10)
 
-purple_airc[outlier_ind, ]
+#display the highest 10 rows
+tail(topten, n = 10)
+
+
 ```
+
 ```{r}
-# Then pm10
-lower_bound <- quantile(purple_airc$`PM10_ug/m3_avg`, 0.0005)
-upper_bound <- quantile(purple_airc$`PM10_ug/m3_avg`, 0.9995)
+# And next pm10
+# First make a temp dataframe with the data:
+topten <- purple_airc
+# Then reorder low to high according to pm10
+topten <- topten[order(topten$`PM10_ug/m3_avg`),]
 
-outlier_ind <- which((purple_airc$`PM10_ug/m3_avg` < lower_bound) | (purple_airc$`PM10_ug/m3_avg` > upper_bound))
+#display the lowest 10 rows
+head(topten, n = 10)
 
-purple_airc[outlier_ind, ]
+#display the highest 10 rows
+tail(topten, n = 10)
+
+
 ```
 
 And finally export the clean csv file to the designated storage folder. Right now I have it exporting to a csv file. You could consider writing to a feather file format as well:
